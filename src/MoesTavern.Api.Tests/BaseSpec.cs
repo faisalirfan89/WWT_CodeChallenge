@@ -9,7 +9,7 @@ namespace MoesTavern.Api.Tests
 {
     public class BaseSpec
     {
-        protected async Task ThrowsUnauthorizedAccessException(FieldType field, IHttpContextAccessor accessor)
+       protected async Task ThrowsUnauthorizedAccessException(FieldType field, IHttpContextAccessor accessor)
         {
             accessor.HttpContext.Request.Headers.Clear();
             await Assert.ThrowsAsync<UnauthorizedAccessException>(async () => 
@@ -22,6 +22,11 @@ namespace MoesTavern.Api.Tests
                 );
 
             accessor.HttpContext.Request.Headers["Authorization"] = "Bearer 12345asdf";
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(async () => 
+                await (Task<object>)field.Resolver.Resolve(new ResolveFieldContext())
+                );
+
+            accessor.HttpContext.Request.Headers["Authorization"] = $"Bearer {Guid.NewGuid()}";
             await Assert.ThrowsAsync<UnauthorizedAccessException>(async () => 
                 await (Task<object>)field.Resolver.Resolve(new ResolveFieldContext())
                 );

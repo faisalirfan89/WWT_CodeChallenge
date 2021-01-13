@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MoesTavern.Data.Model;
 
@@ -50,7 +49,7 @@ namespace MoesTavern.Data.Repository
             //TODO: implement
             throw new NotImplementedException();
         }
-        
+
         public async Task Add(Guid clientId, Beer item)
         {
             //TODO: implement

@@ -23,7 +23,7 @@ namespace MoesTavern.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddHttpContextAccessor()        
+                .AddHttpContextAccessor()
                 .LoadDatabase()
                 .AddSingleton<IInventorySchema, InventorySchema>()
                 .AddSingleton<IInventoryQuery, InventoryQuery>()

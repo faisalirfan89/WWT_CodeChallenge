@@ -1,4 +1,3 @@
-using MoesTavern.Api.Model;
 using GraphQL.Types;
 
 namespace MoesTavern.Api.Model

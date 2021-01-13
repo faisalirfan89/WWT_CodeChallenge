@@ -37,30 +37,32 @@ namespace MoesTavern.Api.Tests
         public async void Constructor_AddBeer_WithCorrectIds()
         {
             var expected = new Beer
-                        { 
-                            Id = new Random().Next(),
-                            Barrelage = new Random().Next(),
-                            Name = Guid.NewGuid().ToString(),
-                            Style = Guid.NewGuid().ToString()
-                        };
+            {
+                Id = new Random().Next(),
+                Barrelage = new Random().Next(),
+                Name = Guid.NewGuid().ToString(),
+                Style = Guid.NewGuid().ToString()
+            };
 
             _mockInventory.Setup(m => m.Remove(It.IsAny<Guid>(), expected.Id));
 
             var field = _testObject.GetField("addBeer");
             var actual = await (Task<object>)field.Resolver
-                .Resolve(new ResolveFieldContext{ 
-                        Arguments = new Dictionary<string, object> {
-                            {"beer", new Dictionary<string, object> 
+                .Resolve(new ResolveFieldContext
+                {
+                    Arguments = new Dictionary<string, object> {
+                            {"beer", new Dictionary<string, object>
                                 {
                                     { "id", expected.Id },
                                     { "barrelage", Convert.ToDecimal(expected.Barrelage) },
                                     { "name", expected.Name },
                                     { "style", expected.Style },
                                 }
-                    }}}) as Beer;
+                    }}
+                }) as Beer;
 
             _mockInventory.Verify(m => m.Add(It.IsAny<Guid>(), It.IsAny<Beer>()));
-            
+
             Assert.Equal(expected.Id, actual.Id);
             Assert.Equal(expected.Barrelage, actual.Barrelage);
             Assert.Equal(expected.Name, actual.Name);
@@ -82,7 +84,7 @@ namespace MoesTavern.Api.Tests
 
             var field = _testObject.GetField("deleteBeer");
             var actualInventoryId = await (Task<object>)field.Resolver
-                .Resolve(new ResolveFieldContext { Arguments = new Dictionary<string, object> {{"id", expectedInventoryId }}});
+                .Resolve(new ResolveFieldContext { Arguments = new Dictionary<string, object> { { "id", expectedInventoryId } } });
 
             _mockInventory.Verify(m => m.Remove(It.IsAny<Guid>(), expectedInventoryId));
 
@@ -94,7 +96,7 @@ namespace MoesTavern.Api.Tests
         {
             await ThrowsUnauthorizedAccessException(_testObject.GetField("deleteBeer"), _fakeContextAccessor);
         }
-        
+
         [Theory]
         [InlineData(ContainerType.HalfPint, 1, 1, .998)]
         [InlineData(ContainerType.Pint, 1, 1, .996)]
@@ -106,22 +108,24 @@ namespace MoesTavern.Api.Tests
         {
             var expectedInventoryId = new Random().Next();
 
-            var soldBeer = new SoldBeer{ Id = expectedInventoryId, Quantity = quantitySold, Container = container };
-            var expected = new Beer{ Id = expectedInventoryId, Barrelage = startingBarrelage, Name = Guid.NewGuid().ToString(), Style = Guid.NewGuid().ToString()};
+            var soldBeer = new SoldBeer { Id = expectedInventoryId, Quantity = quantitySold, Container = container };
+            var expected = new Beer { Id = expectedInventoryId, Barrelage = startingBarrelage, Name = Guid.NewGuid().ToString(), Style = Guid.NewGuid().ToString() };
 
             _mockInventory.Setup(m => m.Find(It.IsAny<Guid>(), expectedInventoryId)).ReturnsAsync(expected);
 
             var field = _testObject.GetField("soldBeer");
             var actual = await (Task<object>)field.Resolver
-                .Resolve(new ResolveFieldContext{ 
-                                Arguments = new Dictionary<string, object> {
-                                    {"beer", new Dictionary<string, object> 
+                .Resolve(new ResolveFieldContext
+                {
+                    Arguments = new Dictionary<string, object> {
+                                    {"beer", new Dictionary<string, object>
                                         {
                                             { "id", soldBeer.Id },
                                             { "quantity", soldBeer.Quantity },
                                             { "container", soldBeer.Container }
                                         }
-                                }}}) as Beer;
+                                }}
+                }) as Beer;
 
             _mockInventory.Verify(m => m.Find(It.IsAny<Guid>(), expectedInventoryId));
             _mockInventory.Verify(m => m.Update(It.IsAny<Guid>(), expectedInventoryId, expectedBarrelage));

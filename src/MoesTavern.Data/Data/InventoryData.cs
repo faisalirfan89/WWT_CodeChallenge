@@ -14,7 +14,7 @@ namespace MoesTavern.Data.Data
 
         public static Dictionary<string, Beer> Cache()
         {
-            if(!Clients.Contains(DuffBreweryClientId))
+            if (!Clients.Contains(DuffBreweryClientId))
                 Clients.Add(DuffBreweryClientId);
 
             foreach (var client in Clients)
@@ -28,16 +28,17 @@ namespace MoesTavern.Data.Data
             }
             return _inventoryData as Dictionary<string, Beer>;
         }
-        
+
         private static void Add(Guid clientId, int id, int barrels, string name, string style) =>
-            _inventoryData.TryAdd( string.Concat(clientId, "-", id), 
-                                            new Beer 
-                                                    { 
-                                                        Id = id,
-                                                        Barrelage = barrels, 
-                                                        Name = name, 
-                                                        Style = style
-                                                    }
-                );
+            _inventoryData.TryAdd(
+                string.Concat(clientId, "-", id),
+                new Beer
+                {
+                    Id = id,
+                    Barrelage = barrels,
+                    Name = name,
+                    Style = style
+                }
+            );
     }
 }

@@ -19,7 +19,7 @@ namespace MoesTavern.Api.Tests
         private readonly InventoryQuery _testObject;
         private readonly IHttpContextAccessor _fakeContextAccessor;
         private readonly Mock<IInventoryRepository> _mockInventory;
-        private List<Beer> _testData { get; } = 
+        private List<Beer> _testData { get; } =
             new List<Beer>
             {
                 new Beer { Id = new Random().Next(), Barrelage = new Random().Next(), Name = Guid.NewGuid().ToString(), Style = Guid.NewGuid().ToString() },
@@ -72,7 +72,7 @@ namespace MoesTavern.Api.Tests
 
             var field = _testObject.GetField("findBeer");
             var actual = await (Task<object>)field.Resolver
-                .Resolve(new ResolveFieldContext{ Arguments = new Dictionary<string, object> {{"id", expected.Id }}}) as Beer;
+                .Resolve(new ResolveFieldContext { Arguments = new Dictionary<string, object> { { "id", expected.Id } } }) as Beer;
 
             _mockInventory.Verify(m => m.Find(It.IsAny<Guid>(), It.IsAny<int>()));
 

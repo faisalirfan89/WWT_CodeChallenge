@@ -71,11 +71,7 @@ namespace MoesTavern.Api.Schema
                 "Bearer 12345asdf",
                $"Bearer {new Guid("87c4705d-f4fe-489f-b4d3-dae2c774c2e9")}"
             };
-            if (!contextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization") || unAuthrizationCode.Contains(contextAccessor.HttpContext.Request.Headers["Authorization"]))
-            {
-                return true;
-            }
-            return false;
+            return (!contextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization") || unAuthrizationCode.Contains(contextAccessor.HttpContext.Request.Headers["Authorization"]));
         }
 
     }

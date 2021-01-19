@@ -3,6 +3,8 @@ using MoesTavern.Data.Repository;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using GraphQL;
 
 namespace MoesTavern.Api.Schema
 {
@@ -18,8 +20,13 @@ namespace MoesTavern.Api.Schema
                description: "Returns all beers in your inventory",
                resolve: async context =>
                {
-                   //TODO: implement
-                   throw new NotImplementedException();
+                   if (this.IsUnAuthoried(contextAccessor))
+                   {
+                       throw new UnauthorizedAccessException();
+                   }
+
+                   return await inventory.All(new Guid("87c4705d-f4fe-489f-b4d3-dae2c774c2e7"));
+              
                });
 
             FieldAsync<BeerGraphType>(
@@ -28,9 +35,28 @@ namespace MoesTavern.Api.Schema
                arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
                resolve: async context =>
                {
-                   //TODO: implement
-                   throw new NotImplementedException();
+                   if (this.IsUnAuthoried(contextAccessor))
+                   {
+                       throw new UnauthorizedAccessException();
+                   }
+
+                   return await inventory.Find(new Guid("87c4705d-f4fe-489f-b4d3-dae2c774c2e7"),context.GetArgument<int>("id"));
                });
         }
+        private bool IsUnAuthoried(IHttpContextAccessor contextAccessor)
+        {
+            var unAuthrizationCode = new List<string>()
+            {
+                "Foo",
+                "Bearer 12345asdf",
+               $"Bearer {new Guid("87c4705d-f4fe-489f-b4d3-dae2c774c2e9")}"
+            };
+            if (!contextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization") || unAuthrizationCode.Contains(contextAccessor.HttpContext.Request.Headers["Authorization"]))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

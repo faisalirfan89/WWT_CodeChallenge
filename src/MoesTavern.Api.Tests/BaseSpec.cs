@@ -26,7 +26,7 @@ namespace MoesTavern.Api.Tests
                 await (Task<object>)field.Resolver.Resolve(new ResolveFieldContext())
                 );
 
-            accessor.HttpContext.Request.Headers["Authorization"] = $"Bearer {Guid.NewGuid()}";
+            accessor.HttpContext.Request.Headers["Authorization"] = $"Bearer {new Guid("87c4705d-f4fe-489f-b4d3-dae2c774c2e9")}";
             await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
                 await (Task<object>)field.Resolver.Resolve(new ResolveFieldContext())
                 );

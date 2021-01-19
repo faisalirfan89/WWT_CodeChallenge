@@ -3,7 +3,7 @@ using MoesTavern.Data.Model;
 
 namespace MoesTavern.Api.Model
 {
-    public class AddBeerGraphType : InputObjectGraphType<Beer>
+public class AddBeerGraphType : InputObjectGraphType<Beer>
     {
         public AddBeerGraphType()
         {
